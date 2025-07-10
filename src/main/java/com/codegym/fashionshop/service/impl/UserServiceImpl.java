@@ -47,6 +47,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public long countTotalUsers() {
+        return userRepository.count();
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null || !user.isEnabled() || user.getRoles().isEmpty()) {

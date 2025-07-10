@@ -1,10 +1,178 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/admin-layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Quản lý Sản phẩm</title>
 </head>
 <body>
+<div layout:fragment="content">
+    <h1 class="mt-4">Quản lý Sản phẩm</h1>
+
+    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
+    <div th:if="${error_message}" class="alert alert-danger" role="alert" th:text="${error_message}"></div>
+
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productModal">
+        <i class="fas fa-plus me-2"></i>Thêm sản phẩm
+    </button>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 fw-bold text-primary">Danh sách sản phẩm</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.id}"></td>
+                        <td>
+                            <img th:if="${product.imageUrl}" th:src="@{/static/uploads/products/{img}(img=${product.imageUrl})}"
+                                 alt="Ảnh sản phẩm" width="60" class="img-thumbnail">
+                            <span th:unless="${product.imageUrl}" class="text-muted">Chưa có</span>
+                        </td>
+                        <td th:text="${product.name}"></td>
+                        <td th:text="${product.category?.name}"></td>
+                        <td th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                        <td>
+                            <a th:href="@{/admin/products/detail/{id}(id=${product.id})}" class="btn btn-sm btn-info" title="Xem chi tiết & Kho hàng">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                            <button class="btn btn-sm btn-warning btn-edit-product" th:data-id="${product.id}" data-bs-toggle="modal" data-bs-target="#productModal" title="Sửa">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" class="btn btn-sm btn-danger" title="Xóa"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="productForm" th:action="@{/admin/products/save}" th:object="${productDto}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                    <input type="hidden" th:field="*{id}" id="productId">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productModalLabel">Thêm sản phẩm mới</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Tên sản phẩm (*)</label>
+                            <input type="text" class="form-control" id="productName" th:field="*{name}" required>
+                            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small"></p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCategory" class="form-label">Danh mục (*)</label>
+                            <select class="form-select" id="productCategory" th:field="*{categoryId}" required>
+                                <option value="">-- Vui lòng chọn --</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                            </select>
+                            <p th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="text-danger small"></p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="productPrice" class="form-label">Giá (*)</label>
+                                <input type="number" class="form-control" id="productPrice" th:field="*{price}" required>
+                                <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger small"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="productImage" class="form-label">Ảnh sản phẩm</label>
+                                <input type="file" class="form-control" id="productImage" th:field="*{imageFile}">
+                                <div id="currentImageContainer" class="mt-2" style="display: none;">
+                                    <small>Ảnh hiện tại:</small><br>
+                                    <img id="currentImage" src="" alt="Ảnh hiện tại" width="100">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Mô tả</label>
+                            <textarea class="form-control" id="productDescription" rows="4" th:field="*{description}"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="custom-scripts">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productModal = document.getElementById('productModal');
+            const productModalLabel = productModal.querySelector('#productModalLabel');
+            const productForm = productModal.querySelector('#productForm');
+            const productIdInput = productModal.querySelector('#productId');
+            const productNameInput = productModal.querySelector('#productName');
+            const productCategorySelect = productModal.querySelector('#productCategory');
+            const productPriceInput = productModal.querySelector('#productPrice');
+            const productDescriptionTextarea = productModal.querySelector('#productDescription');
+            const currentImageContainer = productModal.querySelector('#currentImageContainer');
+            const currentImage = productModal.querySelector('#currentImage');
+
+            // Xử lý khi nhấn nút "Thêm sản phẩm"
+            document.querySelector('button[data-bs-target="#productModal"]').addEventListener('click', function() {
+                productModalLabel.textContent = 'Thêm sản phẩm mới';
+                productForm.reset();
+                productIdInput.value = '';
+                currentImageContainer.style.display = 'none';
+            });
+
+            // Xử lý khi nhấn nút "Sửa"
+            document.querySelectorAll('.btn-edit-product').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    productModalLabel.textContent = 'Cập nhật sản phẩm';
+
+                    // Gọi API để lấy dữ liệu sản phẩm
+                    // (Bạn cần tạo endpoint GET /admin/products/{id} @ResponseBody trong Controller)
+                    fetch(`/admin/products/${productId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Điền dữ liệu vào form
+                            productIdInput.value = data.id;
+                            productNameInput.value = data.name;
+                            productCategorySelect.value = data.categoryId;
+                            productPriceInput.value = data.price;
+                            productDescriptionTextarea.value = data.description || '';
+
+                            // Hiển thị ảnh hiện tại nếu có
+                            if (data.imageUrl) {
+                                currentImage.src = `/static/uploads/products/${data.imageUrl}`;
+                                currentImageContainer.style.display = 'block';
+                            } else {
+                                currentImageContainer.style.display = 'none';
+                            }
+                        })
+                        .catch(error => console.error('Error fetching product:', error));
+                });
+            });
+        });
+    </script>
+</th:block>
 
 </body>
 </html>

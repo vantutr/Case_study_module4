@@ -1,10 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/admin-layout}">
+<head><title>Chi tiết sản phẩm</title></head>
 <body>
+<div layout:fragment="content">
+    <h3 class="mt-4" th:text="'Chi tiết sản phẩm: ' + ${product.name}"></h3>
+    <a th:href="@{/admin/products}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
 
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 fw-bold text-primary">Nhập kho / Cập nhật</h6></div>
+                <div class="card-body">
+                    <form th:action="@{/admin/products/variants/save}" method="post">
+                        <input type="hidden" name="productId" th:value="${product.id}">
+                        <div class="mb-3">
+                            <label class="form-label">Size (*)</label>
+                            <input type="text" name="size" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số lượng nhập (*)</label>
+                            <input type="number" name="quantity" class="form-control" required min="1">
+                        </div>
+                        <button type="submit" class="btn btn-success">Nhập kho</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 fw-bold text-primary">Danh sách tồn kho</h6></div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead><tr><th>ID</th><th>Size</th><th>Đã bán</th><th>Tồn kho</th><th>Còn lại</th><th>Hành động</th></tr></thead>
+                        <tbody>
+                        <tr th:each="v : ${product.variants}">
+                            <td th:text="${v.id}"></td>
+                            <td th:text="${v.size}"></td>
+                            <td th:text="${v.soldQuantity}"></td>
+                            <td th:text="${v.quantity}"></td>
+                            <td th:text="${v.quantity - v.soldQuantity}"></td>
+                            <td>...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

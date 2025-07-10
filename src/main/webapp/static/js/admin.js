@@ -1,33 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Logic bật/tắt sidebar
     const menuToggle = document.getElementById("menu-toggle");
-    const wrapper = document.getElementById("wrapper");
-    if (menuToggle && wrapper) {
+    if (menuToggle) {
         menuToggle.addEventListener("click", function(e) {
             e.preventDefault();
-            wrapper.classList.toggle("toggled");
+            document.getElementById("wrapper").classList.toggle("toggled");
         });
     }
 
-    // Logic xử lý cho nút Sửa danh mục
-    const editButtons = document.querySelectorAll('.btn-edit');
+    // --- LOGIC CHO MODAL SỬA DANH MỤC ---
     const editModal = document.getElementById('editCategoryModal');
-
-    if (editButtons && editModal) {
-        editButtons.forEach(button => {
+    if (editModal) {
+        // Lắng nghe sự kiện click trên TẤT CẢ các nút có class .btn-edit
+        document.querySelectorAll('.btn-edit').forEach(button => {
             button.addEventListener('click', function() {
+                // Lấy ID từ thuộc tính data-id của nút vừa được nhấn
                 const categoryId = this.getAttribute('data-id');
 
                 // Gọi API để lấy dữ liệu danh mục
                 fetch(`/admin/categories/${categoryId}`)
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Network response was not ok');
+                            throw new Error('Không tìm thấy danh mục');
                         }
                         return response.json();
                     })
                     .then(data => {
-                        // Điền dữ liệu vào các trường trong modal Sửa
+                        // Điền dữ liệu nhận được vào các trường trong form của modal Sửa
                         editModal.querySelector('#editCategoryId').value = data.id;
                         editModal.querySelector('#categoryNameEdit').value = data.name;
                         editModal.querySelector('#categoryDescriptionEdit').value = data.description || '';

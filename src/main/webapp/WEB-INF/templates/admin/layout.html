@@ -1,54 +1,28 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
 <body>
-
 <div th:fragment="sidebar" class="bg-dark border-right" id="sidebar-wrapper">
-    <div class="sidebar-heading text-white p-3">
-        <i class="fas fa-cogs me-2"></i> Admin Dashboard
-    </div>
+    <div class="sidebar-heading text-white p-3"><i class="fas fa-cogs me-2"></i> Admin Panel</div>
     <div class="list-group list-group-flush">
-        <a th:href="@{/admin/dashboard}" class="list-group-item list-group-item-action bg-dark text-white"
-           th:classappend="${active_link == 'dashboard' ? 'active' : ''}">
-            <i class="fas fa-tachometer-alt me-2"></i> Tổng quan
-        </a>
-        <a th:href="@{/admin/categories}" class="list-group-item list-group-item-action bg-dark text-white"
-           th:classappend="${active_link == 'categories' ? 'active' : ''}">
-            <i class="fas fa-list-alt me-2"></i> Quản lý danh mục
-        </a>
-        <a th:href="@{/admin/products}" class="list-group-item list-group-item-action bg-dark text-white"
-           th:classappend="${active_link == 'products' ? 'active' : ''}">
-            <i class="fas fa-box-open me-2"></i> Quản lý sản phẩm
-        </a>
-        <a th:href="@{/admin/orders}" class="list-group-item list-group-item-action bg-dark text-white"
-           th:classappend="${active_link == 'orders' ? 'active' : ''}">
-            <i class="fas fa-shopping-cart me-2"></i> Quản lý đơn hàng
-        </a>
-        <a th:href="@{/admin/users}" class="list-group-item list-group-item-action bg-dark text-white"
-           th:classappend="${active_link == 'users' ? 'active' : ''}">
-            <i class="fas fa-users me-2"></i> Quản lý tài khoản
-        </a>
-        <a th:href="@{/logout}" class="list-group-item list-group-item-action bg-dark text-white">
-            <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
-        </a>
+        <a th:href="@{/admin/dashboard}" class="list-group-item list-group-item-action bg-dark text-white" th:classappend="${active_link == 'dashboard' ? 'active' : ''}"><i class="fas fa-tachometer-alt fa-fw me-2"></i>Tổng quan</a>
+        <a th:href="@{/admin/categories}" class="list-group-item list-group-item-action bg-dark text-white" th:classappend="${active_link == 'categories' ? 'active' : ''}"><i class="fas fa-list-alt fa-fw me-2"></i>Danh mục</a>
+        <a th:href="@{/admin/products}" class="list-group-item list-group-item-action bg-dark text-white" th:classappend="${active_link == 'products' ? 'active' : ''}"><i class="fas fa-box-open fa-fw me-2"></i>Sản phẩm</a>
+        <a th:href="@{/admin/orders}" class="list-group-item list-group-item-action bg-dark text-white" th:classappend="${active_link == 'orders' ? 'active' : ''}"><i class="fas fa-shopping-cart fa-fw me-2"></i>Đơn hàng</a>
+        <a th:href="@{/admin/users}" class="list-group-item list-group-item-action bg-dark text-white" th:classappend="${active_link == 'users' ? 'active' : ''}"><i class="fas fa-users fa-fw me-2"></i>Tài khoản</a>
+        <a th:href="@{/logout}" class="list-group-item list-group-item-action bg-dark text-white"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Đăng xuất</a>
     </div>
 </div>
 
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-    <button class="btn btn-primary" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <button class="btn btn-primary" id="menu-toggle"><i class="fas fa-bars"></i></button>
+    <div class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Xin chào, <strong sec:authentication="name">Admin</strong></a>
-            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-user-circle me-1"></i> Xin chào, <strong sec:authentication="name">Admin</strong>
                 </a>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Thông tin cá nhân</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a class="dropdown-item" href="#">Thông tin tài khoản</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a>
                 </div>
@@ -59,10 +33,7 @@
 
 <div th:fragment="scripts">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script th:src="@{/static/js/admin.js}"></script>
 </div>
-
 </body>
 </html>

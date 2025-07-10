@@ -1,110 +1,65 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/admin-layout}">
-<head>
-    <title>Tổng quan</title>
-</head>
+      layout:decorate="~{admin/admin-layout}">
+<head><title>Tổng quan</title></head>
 <body>
-
 <div layout:fragment="content">
     <h1 class="mt-4">Tổng quan</h1>
-    <p>Các số liệu thống kê tổng quan về hoạt động kinh doanh.</p>
     <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card border-start border-primary border-4 h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Đơn hàng chưa duyệt
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${pendingOrdersCount}">40</div>
+                        <div class="col me-2">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Đơn hàng chưa duyệt</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${pendingOrdersCount}">0</div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                        </div>
+                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
+            <div class="card border-start border-success border-4 h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tổng đơn hàng</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalOrdersCount}">215</div>
+                        <div class="col me-2">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Tổng đơn hàng</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${totalOrdersCount}">0</div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                        </div>
+                        <div class="col-auto"><i class="fas fa-shopping-cart fa-2x text-gray-300"></i></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-7 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Sơ đồ thống kê đơn hàng theo ngày</h6>
-                </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start border-info border-4 h-100 py-2">
                 <div class="card-body">
-                    <canvas id="ordersChart" width="100%" height="40"></canvas>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs fw-bold text-info text-uppercase mb-1">Tổng sản phẩm</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${totalProductsCount}">0</div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-box-open fa-2x text-gray-300"></i></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-5 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Top 5 Danh mục bán chạy</h6>
-                </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start border-warning border-4 h-100 py-2">
                 <div class="card-body">
-                    <ul>
-                        <li th:each="category : ${topCategories}" th:text="${category.name + ' (' + category.salesCount + ' sản phẩm)'}">
-                            Áo thun (150 sản phẩm)
-                        </li>
-                    </ul>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">Tài khoản người dùng</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${userAccountsCount}">0</div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<th:block layout:fragment="scripts">
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        // Lấy dữ liệu từ model mà Controller đã truyền sang
-        var chartLabels = /*[[${chartLabels}]]*/ ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
-        var chartData = /*[[${chartData}]]*/ [12, 19, 3, 5, 2, 3, 7];
-
-        function initOrdersChart() {
-            var ctx = document.getElementById("ordersChart");
-            if (ctx) {
-                new Chart(ctx, {
-                    type: "line",
-                    data: {
-                        labels: chartLabels,
-                        datasets: [{
-                            label: "Số đơn hàng",
-                            data: chartData,
-                            backgroundColor: "rgba(0, 123, 255, 0.2)",
-                            borderColor: "rgba(0, 123, 255, 1)",
-                            borderWidth: 1,
-                            fill: true,
-                        }],
-                    },
-                    options: { responsive: true }
-                });
-            }
-        }
-        // Gọi hàm khi trang đã tải xong
-        document.addEventListener('DOMContentLoaded', initOrdersChart);
-        /*]]>*/
-    </script>
-</th:block>
-
 </body>
 </html>

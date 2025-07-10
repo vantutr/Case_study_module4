@@ -1,34 +1,65 @@
-plugins { id 'java'; id 'war' }
-group 'com.codegym'; version '1.0-SNAPSHOT'
-repositories { mavenCentral() }
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.codegym'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
 ext {
     springVersion = '5.3.23'
-    jpaVersion = '2.2'
-    hibernateVersion = '5.6.11.Final'
-    thymeleafVersion = '3.0.15.RELEASE'
+    springSecurityVersion = '5.7.12' // Tương thích tốt với Spring 5.3.x
+    hibernateVersion = '5.6.10.Final'
+    thymeleafVersion = '3.1.1.RELEASE'
 }
+
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
-tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 
 dependencies {
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
+
+    // Spring Framework
     implementation "org.springframework:spring-webmvc:${springVersion}"
     implementation "org.springframework:spring-context:${springVersion}"
     implementation "org.springframework:spring-orm:${springVersion}"
-    implementation "org.springframework.data:spring-data-jpa:2.7.3"
-    implementation "org.hibernate:hibernate-core:${hibernateVersion}"
-    implementation "javax.persistence:javax.persistence-api:${jpaVersion}"
-    runtimeOnly 'mysql:mysql-connector-java:8.0.30'
-    implementation "org.thymeleaf:thymeleaf-spring5:${thymeleafVersion}"
-    implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0"
-    implementation 'javax.validation:validation-api:2.0.1.Final'
-    implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    def springSecurityVersion = '5.7.13'
+    // Spring Data & Hibernate
+    implementation "org.springframework.data:spring-data-jpa:2.7.0"
+    implementation "org.hibernate:hibernate-core:${hibernateVersion}"
+    implementation "javax.persistence:javax.persistence-api:2.2"
+
+    // Spring Security
     implementation "org.springframework.security:spring-security-web:${springSecurityVersion}"
     implementation "org.springframework.security:spring-security-config:${springSecurityVersion}"
-    implementation "org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE"
+
+    // Thymeleaf
+    implementation "org.thymeleaf:thymeleaf-spring5:${thymeleafVersion}"
+    implementation "org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.1.0.RELEASE"
+    implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0"
+
+    // Database & File Upload
+    runtimeOnly 'mysql:mysql-connector-java:8.0.30'
+    implementation 'commons-fileupload:commons-fileupload:1.5'
+
+    // Validation (hệ sinh thái javax)
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'org.hibernate.validator:hibernate-validator:6.2.5.Final'
+
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
 }
+
+test {
+    useJUnitPlatform()}

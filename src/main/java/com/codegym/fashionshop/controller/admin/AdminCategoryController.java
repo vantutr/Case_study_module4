@@ -56,9 +56,8 @@ public class AdminCategoryController {
         return "redirect:/admin/categories";
     }
 
-    // Endpoint để lấy thông tin một danh mục (phục vụ cho AJAX của modal Sửa)
     @GetMapping("/{id}")
-    @ResponseBody // Trả về dữ liệu dạng JSON
+    @ResponseBody // Trả về dữ liệu dạng JSON thay vì một view
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id) {
         CategoryDto categoryDto = categoryService.findDtoById(id);
         if (categoryDto != null) {

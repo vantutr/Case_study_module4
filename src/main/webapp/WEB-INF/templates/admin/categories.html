@@ -2,45 +2,36 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/admin-layout}">
-
-<head>
-    <title>Quản lý Danh mục</title>
-</head>
+<head><title>Quản lý Danh mục</title></head>
 <body>
 <div layout:fragment="content">
     <h1 class="mt-4">Quản lý Danh mục con</h1>
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error_message}" class="alert alert-danger" th:text="${error_message}"></div>
 
-    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
-    <div th:if="${error_message}" class="alert alert-danger" role="alert" th:text="${error_message}"></div>
-
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-        <i class="fas fa-plus me-2"></i> Thêm danh mục con
-    </button>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal"><i class="fas fa-plus me-2"></i>Thêm danh mục con</button>
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Danh sách</h6></div>
+        <div class="card-header py-3"><h6 class="m-0 fw-bold text-primary">Danh sách</h6></div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered">
                     <thead>
-                    <tr>
-                        <th>ID</th><th>Tên danh mục con</th><th>Thuộc danh mục cha</th><th>Hành động</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên</th>
+                            <th>Thuộc danh mục cha</th>
+                            <th>Hành động</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="category : ${subCategories}">
-                        <td th:text="${category.id}"></td>
-                        <td th:text="${category.name}"></td>
-                        <td th:text="${category.parent?.name}"></td>
+                    <tr th:each="cat : ${subCategories}">
+                        <td th:text="${cat.id}"></td>
+                        <td th:text="${cat.name}"></td>
+                        <td th:text="${cat.parent?.name}"></td>
                         <td>
-                            <button class="btn btn-sm btn-warning btn-edit" th:data-id="${category.id}"
-                                    data-bs-toggle="modal" data-bs-target="#editCategoryModal">
-                                <i class="fas fa-edit"></i> Sửa
-                            </button>
-                            <a th:href="@{/admin/categories/delete/{id}(id=${category.id})}" class="btn btn-sm btn-danger"
-                               onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
-                                <i class="fas fa-trash-alt"></i> Xóa
-                            </a>
+                            <button class="btn btn-sm btn-warning btn-edit" th:data-id="${cat.id}" data-bs-toggle="modal" data-bs-target="#editCategoryModal"><i class="fas fa-edit"></i></button>
+                            <a th:href="@{/admin/categories/delete/{id}(id=${cat.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Xác nhận xóa?')"><i class="fas fa-trash-alt"></i></a>
                         </td>
                     </tr>
                     </tbody>
@@ -53,13 +44,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form th:action="@{/admin/categories/save}" th:object="${categoryDto}" method="post">
-                    <div class="modal-header"><h5 class="modal-title">Thêm danh mục con mới</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                    <div class="modal-header"><h5 class="modal-title">Thêm danh mục con</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="parentCategoryAdd" class="form-label">Chọn danh mục cha (*)</label>
+                            <label for="parentCategoryAdd" class="form-label">Danh mục cha (*)</label>
                             <select class="form-select" id="parentCategoryAdd" th:field="*{parentId}" required>
-                                <option value="">-- Vui lòng chọn --</option>
-                                <option th:each="parent : ${parentCategories}" th:value="${parent.id}" th:text="${parent.name}"></option>
+                                <option value="">-- Chọn --</option>
+                                <option th:each="p : ${parentCategories}" th:value="${p.id}" th:text="${p.name}"></option>
                             </select>
                             <p th:if="${#fields.hasErrors('parentId')}" th:errors="*{parentId}" class="text-danger small"></p>
                         </div>
@@ -87,14 +78,13 @@
                     <div class="modal-header"><h5 class="modal-title">Cập nhật danh mục con</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="parentCategoryEdit" class="form-label">Chọn danh mục cha (*)</label>
+                            <label for="parentCategoryEdit" class="form-label">Danh mục cha (*)</label>
                             <select class="form-select" id="parentCategoryEdit" name="parentId" required>
-                                <option value="">-- Vui lòng chọn --</option>
-                                <option th:each="parent : ${parentCategories}" th:value="${parent.id}" th:text="${parent.name}"></option>
+                                <option th:each="p : ${parentCategories}" th:value="${p.id}" th:text="${p.name}"></option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="categoryNameEdit" class="form-label">Tên danh mục con (*)</label>
+                            <label for="categoryNameEdit" class="form-label">Tên (*)</label>
                             <input type="text" class="form-control" id="categoryNameEdit" name="name" required>
                         </div>
                         <div class="mb-3">
@@ -102,7 +92,7 @@
                             <textarea class="form-control" id="categoryDescriptionEdit" name="description" rows="3"></textarea>
                         </div>
                     </div>
-                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button><button type="submit" class="btn btn-primary">Lưu thay đổi</button></div>
+                    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button><button type="submit" class="btn btn-primary">Lưu</button></div>
                 </form>
             </div>
         </div>

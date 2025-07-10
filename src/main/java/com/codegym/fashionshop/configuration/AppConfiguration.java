@@ -11,6 +11,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.MultipartFilter;
+
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -58,7 +62,7 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
     public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.addDialect(new SpringSecurityDialect()); // Tích hợp Spring Security
+        templateEngine.addDialect(new SpringSecurityDialect());
         templateEngine.addDialect(new LayoutDialect());
         return templateEngine;
     }
@@ -71,18 +75,17 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         return viewResolver;
     }
 
-    // Cấu hình JPA và Database
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/fashionshop_db?useSSL=false&createDatabaseIfNotExist=true");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/fashionshop_db");
         dataSource.setUsername("root");
         dataSource.setPassword("123456");
         return dataSource;
     }
 
-    Properties additionalProperties() {
+    public Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
@@ -111,5 +114,22 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+    }
+
+
+    //xử lyus upload ảnh
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(5 * 1024 * 1024); // 5MB
+        return multipartResolver;
+    }
+
+    @Bean
+    public MultipartFilter multipartFilter() {
+        MultipartFilter multipartFilter = new MultipartFilter();
+        // Tên "multipartResolver" phải khớp với tên bean CommonsMultipartResolver bạn đã tạo
+        multipartFilter.setMultipartResolverBeanName("multipartResolver");
+        return multipartFilter;
     }
 }

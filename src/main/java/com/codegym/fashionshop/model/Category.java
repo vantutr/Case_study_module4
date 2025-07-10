@@ -19,7 +19,7 @@ public class Category {
     private String description;
 
     // Quan hệ Nhiều-Một với chính nó (nhiều danh mục con thuộc một danh mục cha)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private Category parent;
 
