@@ -1,0 +1,207 @@
+/* General Body & HTML */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Modern font stack */
+    /* Màu nền xám nhẹ, đơn giản và tinh tế */
+    background-color: #f2f4f8; /* Một tông xám rất nhạt, gần như trắng ngà */
+    display: flex; /* Use flexbox for full page centering */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent scrollbars if content is too large */
+}
+
+/* Wrapper for Auth Pages */
+.auth-wrapper {
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px; /* Padding for smaller screens */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+/* Container for the Auth Card */
+.auth-container {
+    max-width: 500px; /* Default max width for login */
+    width: 100%;
+    padding: 15px; /* Inner padding */
+}
+
+/* New class for wider containers, specifically for register with more fields */
+.large-auth-container {
+    max-width: 800px; /* Increased max width for register form */
+}
+
+/* Main Auth Card (Login/Register Box) */
+.auth-card {
+    background-color: #ffffff; /* Màu trắng cho khung đăng nhập/đăng ký */
+    border-radius: 15px; /* Bo góc mềm mại */
+    /* Bóng đổ nổi bật hơn: hơi lớn và mờ dần */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Bóng đổ rõ nét và rộng hơn */
+    padding: 40px; /* Increased padding inside the card */
+    position: relative;
+    overflow: hidden; /* Hide any overflow, e.g., from pseudo-elements */
+    z-index: 1; /* Ensure card is above background details */
+    transition: all 0.3s ease; /* Smooth transition for any future interactions */
+}
+
+.auth-card:hover {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2); /* Bóng đổ rõ hơn khi hover */
+}
+
+/* Decorative elements (có thể không cần thiết với nền xám đơn giản, nhưng vẫn giữ nếu bạn muốn hiệu ứng tinh tế) */
+/* Với nền xám nhạt và card trắng, các hiệu ứng này có thể không còn cần thiết hoặc cần điều chỉnh nhiều.
+   Tôi sẽ giữ lại nhưng làm chúng cực kỳ mờ để chỉ tạo cảm giác subtle. Nếu bạn muốn loại bỏ hoàn toàn,
+   có thể xóa cả khối .auth-card::before và .auth-card::after */
+.auth-card::before {
+    content: "";
+    position: absolute;
+    top: -30px; /* Dịch vào gần góc hơn */
+    left: -30px;
+    width: 100px;
+    height: 100px;
+    background: rgba(0, 123, 255, 0.05); /* Rất mờ, màu xanh primary */
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(20px);
+}
+
+.auth-card::after {
+    content: "";
+    position: absolute;
+    bottom: -30px; /* Dịch vào gần góc hơn */
+    right: -30px;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 99, 132, 0.05); /* Rất mờ, màu đỏ/hồng nhẹ */
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(15px);
+}
+
+/* Headings and Paragraphs */
+.auth-title {
+    font-weight: 700;
+    color: #333; /* Giữ màu tối cho tiêu đề trên nền card trắng */
+    margin-bottom: 10px;
+}
+
+.text-muted {
+    color: #6c757d !important; /* Giữ màu xám cho văn bản phụ trên nền card trắng */
+}
+
+/* Form Input Styling */
+.input-group-text {
+    background-color: #e9ecef; /* Màu nền xám nhạt hơn cho icon input */
+    border-right: none;
+    border-color: #dee2e6;
+    color: #495057; /* Màu icon đậm hơn một chút để rõ nét */
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+}
+
+.form-control {
+    border-left: none;
+    border-color: #dee2e6;
+    padding: 0.75rem 1rem;
+    height: calc(2.25rem + 10px);
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Bootstrap primary color focus */
+    border-color: #007bff;
+}
+
+/* Links */
+.auth-link {
+    color: #007bff; /* Màu xanh Bootstrap */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* Buttons */
+.auth-btn {
+    background-color: #007bff; /* Primary blue */
+    border-color: #007bff;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.auth-btn:hover {
+    background-color: #0056b3;
+    border-color: #004a99;
+    transform: translateY(-2px);
+}
+
+/* Divider for Social Login */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 30px 0;
+    color: #adb5bd;
+    font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #e9ecef; /* Màu đường kẻ ngang */
+}
+
+.divider:not(:empty)::before {
+    margin-right: 0.25em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: 0.25em;
+}
+
+/* Social Login Buttons */
+.social-login .social-btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    margin: 0 5px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.social-login .social-btn:hover {
+    background-color: #007bff;
+    transform: translateY(-2px);
+}
+
+.social-login .social-btn .fab {
+    font-size: 1.1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 30px 25px;
+    }
+    .social-login .social-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+    .social-login {
+        display: flex;
+        flex-direction: column;
+    }
+    .large-auth-container {
+        max-width: 100%;
+    }
+}

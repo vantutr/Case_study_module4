@@ -1,0 +1,103 @@
+body {
+    overflow-x: hidden;
+}
+
+#wrapper {
+    display: flex;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: -15rem;
+    transition: margin 0.25s ease-out;
+    width: 15rem; /* Chiều rộng sidebar */
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+    color: #f8f9fa;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -15rem;
+    }
+}
+
+/* Custom styles for list-group-item-action */
+.list-group-item-action.active {
+    background-color: #007bff !important; /* Màu xanh của primary Bootstrap */
+    border-color: #007bff !important;
+}
+.list-group-item-action:hover {
+    background-color: #343a40 !important; /* Màu tối hơn khi hover */
+    color: #fff !important;
+}
+
+/* Card styles */
+.card {
+    border-radius: 0.5rem;
+}
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    background-color: #f8f9fa;
+}
+.card-body {
+    padding: 1.25rem;
+}
+.text-xs {
+    font-size: 0.75rem;
+}
+.font-weight-bold {
+    font-weight: 700;
+}
+.text-uppercase {
+    text-transform: uppercase;
+}
+.text-primary {
+    color: #007bff !important;
+}
+.text-success {
+    color: #28a745 !important;
+}
+.text-info {
+    color: #17a2b8 !important;
+}
+.text-warning {
+    color: #ffc107 !important;
+}
+.text-gray-800 {
+    color: #343a40 !important;
+}
+.text-gray-300 {
+    color: #dee2e6 !important;
+}
+
+/* Chart styles */
+canvas {
+    max-width: 100%;
+    height: auto;
+}
