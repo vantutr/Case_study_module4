@@ -35,5 +35,6 @@ public class Product {
     // Quan hệ Một-Nhiều: Một sản phẩm có nhiều biến thể (size, số lượng)
     // CascadeType.ALL: Khi xóa sản phẩm, tất cả các biến thể của nó cũng sẽ bị xóa.
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC") // Sắp xếp các biến thể theo ID tăng dần
     private Set<ProductVariant> variants;
 }

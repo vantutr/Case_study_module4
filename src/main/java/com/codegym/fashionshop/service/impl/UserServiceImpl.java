@@ -1,5 +1,7 @@
 package com.codegym.fashionshop.service.impl;
 
+import com.codegym.fashionshop.configuration.CustomUserDetails;
+import com.codegym.fashionshop.dto.UserAdminUpdateDto;
 import com.codegym.fashionshop.dto.UserRegisterDto;
 import com.codegym.fashionshop.model.Role;
 import com.codegym.fashionshop.model.User;
@@ -9,14 +11,13 @@ import com.codegym.fashionshop.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +30,7 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
 
     @Override
     public void save(UserRegisterDto dto) {
@@ -54,17 +56,52 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
-        if (user == null || !user.isEnabled() || user.getRoles().isEmpty()) {
+        if (user == null || !user.isEnabled()) {
             throw new UsernameNotFoundException("Tài khoản hoặc mật khẩu không hợp lệ.");
         }
-        Set<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toSet());
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        return new CustomUserDetails(user);
     }
 
     @Override
     public User findByUsername(String name) {
         return userRepository.findByUsername(name);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public List<User> searchByUsername(String username) {
+        return userRepository.findByUsernameContainingIgnoreCase(username);
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void updateUserFromAdmin(UserAdminUpdateDto dto) {
+        User user = findById(dto.getId());
+        if (user != null) {
+            Role role = roleRepository.findById(dto.getRoleId()).orElse(null);
+            if (role != null) {
+                user.setRoles(Collections.singleton(role));
+            }
+            user.setEnabled(dto.isEnabled());
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        // Ngăn admin tự xóa chính mình
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userToDelete = findById(id);
+        if (userToDelete != null && !userToDelete.getUsername().equals(currentUsername)) {
+            userRepository.deleteById(id);
+        }
     }
 }

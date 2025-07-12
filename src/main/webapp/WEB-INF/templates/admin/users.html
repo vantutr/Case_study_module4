@@ -1,10 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/admin-layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Quản lý Tài khoản</title>
 </head>
 <body>
+<div layout:fragment="content">
+    <h1 class="mt-4">Quản lý Tài khoản</h1>
 
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form th:action="@{/admin/users}" method="get" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <input type="text" name="keyword" class="form-control" placeholder="Nhập tên đăng nhập..." th:value="${keyword}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search me-2"></i>Tìm kiếm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 fw-bold text-primary">Danh sách tài khoản</h6></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên đăng nhập</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Quyền</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.username}"></td>
+                        <td th:text="${user.fullName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td>
+                            <span th:each="role : ${user.roles}" th:text="${role.name}" class="badge bg-info me-1"></span>
+                        </td>
+                        <td>
+                            <span th:if="${user.enabled}" class="badge bg-success">Hoạt động</span>
+                            <span th:unless="${user.enabled}" class="badge bg-secondary">Đã khóa</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-warning btn-edit-user"
+                                    th:data-id="${user.id}"
+                                    th:data-role-id="${user.roles.isEmpty() ? '' : user.roles.iterator().next().id}"
+                                    th:data-enabled="${user.enabled}"
+                                    data-bs-toggle="modal" data-bs-target="#editUserModal">
+                                <i class="fas fa-user-edit"></i>
+                            </button>
+                            <a th:href="@{/admin/users/delete/{id}(id=${user.id})}"
+                               class="btn btn-sm btn-danger"
+                               th:if="${#authentication.name != user.username}"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/admin/users/update}" method="post" th:object="${userDto}">
+                    <input type="hidden" name="id" id="editUserId" th:field="*{id}">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cập nhật tài khoản</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editUserRole" class="form-label">Quyền</label>
+                            <select id="editUserRole" class="form-select" th:field="*{roleId}">
+                                <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Trạng thái</label>
+                            <select id="editUserStatus" class="form-select" th:field="*{enabled}">
+                                <option th:value="true">Hoạt động</option>
+                                <option th:value="false">Khóa</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="custom-scripts">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editUserModal = document.getElementById('editUserModal');
+            if (editUserModal) {
+                editUserModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const userId = button.getAttribute('data-id');
+                    const roleId = button.getAttribute('data-role-id');
+                    const enabled = button.getAttribute('data-enabled');
+
+                    editUserModal.querySelector('#editUserId').value = userId;
+                    editUserModal.querySelector('#editUserRole').value = roleId;
+                    editUserModal.querySelector('#editUserStatus').value = enabled;
+                });
+            }
+        });
+    </script>
+</th:block>
 </body>
 </html>

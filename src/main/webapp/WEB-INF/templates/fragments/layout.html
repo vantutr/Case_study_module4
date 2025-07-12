@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+<body>
+
+<header th:fragment="header" class="fixed-header fixed-top shadow-sm bg-white">
+  <div class="top-header py-1 border-bottom bg-light">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="hotline">
+        Hotline: <a href="tel:0386289270">0386289270</a> (8:30-21:30)
+      </div>
+      <div sec:authorize="isAuthenticated()" class="user-info">
+        <a href="#" class="text-dark text-decoration-none">
+          <i class="far fa-bell"></i> Thông báo của tôi
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" th:href="@{/home}">
+        <img th:src="@{/static/images/logo.png}" alt="Logo" style="height: 30px" />
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/home}">Trang chủ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/shop}">Cửa hàng</a>
+          </li>
+          <li class="nav-item dropdown" th:each="parent : ${parentCategories}">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" th:text="${parent.name}">
+            </a>
+            <ul class="dropdown-menu">
+              <li th:each="child : ${parent.children}">
+                <a class="dropdown-item" href="#" th:text="${child.name}"></a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#">Tin tức</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center">
+          <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
+          <a th:href="@{/cart}" class="nav-icon position-relative">
+            <i class="fas fa-shopping-cart"></i>
+            <span th:if="${cartItemCount > 0}"
+                  th:text="${cartItemCount}"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    </span>
+          </a>
+
+          <div sec:authorize="isAuthenticated()" class="nav-item dropdown nav-icon">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="far fa-user me-2"></i>
+              <span sec:authentication="name"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Tài khoản của tôi</a></li>
+              <li><a class="dropdown-item" href="#">Đơn hàng của tôi</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>
+            </ul>
+          </div>
+
+          <div sec:authorize="isAnonymous()" class="d-flex align-items-center ms-3">
+            <a th:href="@{/login}" class="btn btn-outline-primary btn-sm me-2">Đăng nhập</a>
+            <a th:href="@{/register}" class="btn btn-primary btn-sm">Đăng ký</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<footer th:fragment="footer" class="site-footer bg-light pt-5 pb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="footer-title">Thông tin liên hệ</h5>
+        <p class="text-muted">
+          <strong>Địa chỉ:</strong> 109, Lê Lợi, Quyết Thắng, Kon Tum
+        </p>
+        <p class="text-muted"><strong>Hotline:</strong> 0386-289270</p>
+        <p class="text-muted">
+          <strong>Email:</strong> tranvantu06042001@gmail.com
+        </p>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="footer-title">Danh mục</h5>
+        <ul class="list-unstyled">
+          <li><a href="#" class="footer-link">Tài khoản của tôi</a></li>
+          <li><a href="#" class="footer-link">Sản phẩm yêu thích</a></li>
+          <li><a href="#" class="footer-link">Giỏ hàng</a></li>
+          <li><a href="#" class="footer-link">Đăng nhập</a></li>
+          <li><a href="#" class="footer-link">Thanh toán</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="footer-title">Vận chuyển</h5>
+        <ul class="list-unstyled">
+          <li><a href="#" class="footer-link">Sản phẩm mới</a></li>
+          <li><a href="#" class="footer-link">Khuyến mãi</a></li>
+          <li><a href="#" class="footer-link">Sản phẩm đặc biệt</a></li>
+          <li><a href="#" class="footer-link">Nhà sản xuất</a></li>
+          <li><a href="#" class="footer-link">Nhà cung cấp</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="footer-title">Nhận tin từ chúng tôi</h5>
+        <div class="social-icons">
+          <a href="#" class="social-icon"
+          ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"
+          ><i class="fab fa-linkedin-in"></i
+          ></a>
+          <a href="#" class="social-icon"
+          ><i class="fab fa-instagram"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

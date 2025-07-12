@@ -13,8 +13,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalTime;
+
 
 @Controller
 @RequestMapping("/admin/orders")
@@ -28,21 +31,27 @@ public class AdminOrderController {
                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                 Model model) {
 
-        // Tạo Specification để lọc động
         Specification<Order> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.hasText(status)) {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));
             }
+
+            // THAY ĐỔI LOGIC LỌC NGÀY Ở ĐÂY
             if (date != null) {
-                predicates.add(criteriaBuilder.equal(criteriaBuilder.function("DATE", LocalDate.class, root.get("orderDate")), date));
+                // Tạo thời điểm bắt đầu của ngày (ví dụ: 2025-07-11 00:00:00)
+                LocalDateTime startOfDay = date.atStartOfDay();
+                // Tạo thời điểm kết thúc của ngày (ví dụ: 2025-07-11 23:59:59)
+                LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+                // Tìm các đơn hàng có orderDate nằm giữa khoảng thời gian này
+                predicates.add(criteriaBuilder.between(root.get("orderDate"), startOfDay, endOfDay));
             }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
         model.addAttribute("active_link", "orders");
         model.addAttribute("orders", orderService.findAll(spec));
-        // Gửi lại các giá trị lọc để hiển thị trên form
         model.addAttribute("currentStatus", status);
         model.addAttribute("currentDate", date);
         return "admin/orders";
@@ -50,7 +59,7 @@ public class AdminOrderController {
 
     @GetMapping("/detail/{id}")
     public String showOrderDetail(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Order order = orderService.findById(id);
+        Order order = orderService.findByIdWithDetails(id);
         if (order == null) {
             redirectAttributes.addFlashAttribute("error_message", "Không tìm thấy đơn hàng!");
             return "redirect:/admin/orders";

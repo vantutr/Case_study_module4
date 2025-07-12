@@ -114,6 +114,11 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+
+        // Cấu hình cho thư mục upload ảnh bên ngoài project
+        registry.addResourceHandler("/uploads/products/**")
+                // Và nó sẽ tìm file trong thư mục C:/fashionshop_uploads/products/
+                .addResourceLocations("file:C:/fashionshop_uploads/products/");
     }
 
 

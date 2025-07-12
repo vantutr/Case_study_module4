@@ -43,4 +43,30 @@ public class ProductVariantServiceImpl implements IProductVariantService {
             }
         }
     }
+
+    @Override
+    public void update(ProductVariantDto variantDto) {
+        // Tìm biến thể hiện có bằng ID
+        Optional<ProductVariant> variantOpt = variantRepository.findById(variantDto.getId());
+        if (variantOpt.isPresent()) {
+            ProductVariant variant = variantOpt.get();
+            variant.setSize(variantDto.getSize().toUpperCase());
+            variant.setQuantity(variantDto.getQuantity()); // Ghi đè số lượng tồn kho
+            variantRepository.save(variant);
+        }
+        // Có thể throw exception nếu không tìm thấy
+    }
+
+    @Override
+    public Long deleteById(Long variantId) {
+        // Tìm biến thể để lấy productId trước khi xóa
+        Optional<ProductVariant> variantOpt = variantRepository.findById(variantId);
+        if (variantOpt.isPresent()) {
+            ProductVariant variant = variantOpt.get();
+            Long productId = variant.getProduct().getId();
+            variantRepository.deleteById(variantId);
+            return productId;
+        }
+        return null; // Hoặc throw exception
+    }
 }

@@ -9,6 +9,20 @@
 <div layout:fragment="content">
     <h1 class="mt-4">Quản lý Sản phẩm</h1>
 
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form th:action="@{/admin/products}" method="get" class="row g-3 align-items-center">
+                <div class="col flex-grow-1">
+                    <input type="text" name="keyword" class="form-control" placeholder="Nhập ID hoặc tên sản phẩm..." th:value="${keyword}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search me-2"></i>Tìm kiếm</button>
+                    <a th:href="@{/admin/products}" class="btn btn-secondary"><i class="fas fa-sync-alt me-2"></i>Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
     <div th:if="${error_message}" class="alert alert-danger" role="alert" th:text="${error_message}"></div>
 
@@ -37,7 +51,8 @@
                     <tr th:each="product : ${products}">
                         <td th:text="${product.id}"></td>
                         <td>
-                            <img th:if="${product.imageUrl}" th:src="@{/static/uploads/products/{img}(img=${product.imageUrl})}"
+                            <img th:if="${product.imageUrl}"
+                                 th:src="@{/uploads/products/{img}(img=${product.imageUrl})}"
                                  alt="Ảnh sản phẩm" width="60" class="img-thumbnail">
                             <span th:unless="${product.imageUrl}" class="text-muted">Chưa có</span>
                         </td>

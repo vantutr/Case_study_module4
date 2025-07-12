@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/admin-layout}">
-<head><title>Chi tiết sản phẩm</title></head>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/admin-layout}">
+<head>
+    <title>Chi tiết sản phẩm</title>
+</head>
 <body>
 <div layout:fragment="content">
     <h3 class="mt-4" th:text="'Chi tiết sản phẩm: ' + ${product.name}"></h3>
     <a th:href="@{/admin/products}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
+
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error_message}" class="alert alert-danger" th:text="${error_message}"></div>
 
     <div class="row">
         <div class="col-md-4">
@@ -26,27 +33,108 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-8">
             <div class="card shadow mb-4">
                 <div class="card-header py-3"><h6 class="m-0 fw-bold text-primary">Danh sách tồn kho</h6></div>
                 <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead><tr><th>ID</th><th>Size</th><th>Đã bán</th><th>Tồn kho</th><th>Còn lại</th><th>Hành động</th></tr></thead>
-                        <tbody>
-                        <tr th:each="v : ${product.variants}">
-                            <td th:text="${v.id}"></td>
-                            <td th:text="${v.size}"></td>
-                            <td th:text="${v.soldQuantity}"></td>
-                            <td th:text="${v.quantity}"></td>
-                            <td th:text="${v.quantity - v.soldQuantity}"></td>
-                            <td>...</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Size</th>
+                                <th>Đã bán</th>
+                                <th>Tồn kho</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="v : ${product.variants}">
+                                <td th:text="${v.id}"></td>
+                                <td th:text="${v.size}"></td>
+                                <td th:text="${v.soldQuantity}"></td>
+                                <td th:text="${v.quantity}"></td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning btn-edit-variant"
+                                            th:data-id="${v.id}"
+                                            th:data-size="${v.size}"
+                                            th:data-quantity="${v.quantity}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editVariantModal">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <a th:href="@{/admin/products/variants/delete/{id}(id=${v.id})}"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa biến thể này?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(product.variants)}">
+                                <td colspan="5" class="text-center">Chưa có biến thể nào.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="editVariantModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/admin/products/variants/update}" method="post">
+                    <input type="hidden" name="id" id="editVariantId">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cập nhật biến thể</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editVariantSize" class="form-label">Size (*)</label>
+                            <input type="text" class="form-control" id="editVariantSize" name="size" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editVariantQuantity" class="form-label">Số lượng tồn kho (*)</label>
+                            <input type="number" class="form-control" id="editVariantQuantity" name="quantity" required min="0">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<th:block layout:fragment="custom-scripts">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editVariantModal = document.getElementById('editVariantModal');
+            if(editVariantModal) {
+                editVariantModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget; // Nút đã được click để mở modal
+
+                    // Lấy dữ liệu từ các thuộc tính data-* của nút
+                    const variantId = button.getAttribute('data-id');
+                    const variantSize = button.getAttribute('data-size');
+                    const variantQuantity = button.getAttribute('data-quantity');
+
+                    // Cập nhật giá trị vào các trường trong form của modal
+                    const modalForm = editVariantModal.querySelector('form');
+                    modalForm.querySelector('#editVariantId').value = variantId;
+                    modalForm.querySelector('#editVariantSize').value = variantSize;
+                    modalForm.querySelector('#editVariantQuantity').value = variantQuantity;
+                });
+            }
+        });
+    </script>
+</th:block>
 </body>
 </html>

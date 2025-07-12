@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/products")
@@ -28,18 +30,25 @@ public class AdminProductController {
     private IProductVariantService variantService;
 
     @GetMapping
-    public String showProductList(Model model) {
-        model.addAttribute("active_link", "products");
-        model.addAttribute("products", productService.findAll());
-        model.addAttribute("categories", categoryService.findAllSubCategories());
+    public String showProductList(@RequestParam(required = false) String keyword, Model model) {
+        List<Product> products;
+        // Nếu có từ khóa thì tìm kiếm, không thì lấy tất cả
+        if (StringUtils.hasText(keyword)) {
+            products = productService.search(keyword);
+        } else {
+            products = productService.findAll();
+        }
 
-        // Nếu không có DTO lỗi từ lần redirect trước, thì tạo DTO mới
+        model.addAttribute("active_link", "products");
+        model.addAttribute("products", products);
+        model.addAttribute("categories", categoryService.findAllSubCategories());
+        model.addAttribute("keyword", keyword); // Trả lại keyword về view
+
         if (!model.containsAttribute("productDto")) {
             model.addAttribute("productDto", new ProductDto());
         }
         return "admin/products";
     }
-
     @PostMapping("/save")
     public String saveProduct(@Valid @ModelAttribute("productDto") ProductDto productDto,
                               BindingResult bindingResult,
@@ -68,11 +77,13 @@ public class AdminProductController {
         return productDto != null ? ResponseEntity.ok(productDto) : ResponseEntity.notFound().build();
     }
 
-    // Các phương thức khác...
     @GetMapping("/detail/{id}")
     public String showProductDetail(@PathVariable Long id, Model model) {
-        Product product = productService.findById(id);
-        if (product == null) { return "redirect:/admin/products"; }
+        Product product = productService.findByIdWithVariants(id);
+
+        if (product == null) {
+            return "redirect:/admin/products";
+        }
         model.addAttribute("active_link", "products");
         model.addAttribute("product", product);
         return "admin/product-detail";
@@ -95,4 +106,25 @@ public class AdminProductController {
         }
         return "redirect:/admin/products";
     }
+
+    @PostMapping("/variants/update")
+    public String updateProductVariant(@ModelAttribute ProductVariantDto variantDto, RedirectAttributes redirectAttributes) {
+        variantService.update(variantDto);
+        redirectAttributes.addFlashAttribute("message", "Cập nhật biến thể thành công!");
+        return "redirect:/admin/products/detail/" + variantDto.getProductId();
+    }
+
+    @GetMapping("/variants/delete/{id}")
+    public String deleteProductVariant(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Long productId = variantService.deleteById(id);
+        if (productId != null) {
+            redirectAttributes.addFlashAttribute("message", "Đã xóa biến thể thành công!");
+            return "redirect:/admin/products/detail/" + productId;
+        }
+        // Xử lý trường hợp không tìm thấy variant để xóa
+        redirectAttributes.addFlashAttribute("error_message", "Không tìm thấy biến thể để xóa!");
+        return "redirect:/admin/products"; // Chuyển về trang danh sách sản phẩm
+    }
+
+
 }

@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ProductVariantDto {
+    private Long id;
+
     @NotNull
     private Long productId;
 

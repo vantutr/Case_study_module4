@@ -1,0 +1,282 @@
+/* Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap");
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: #f8f9fa; /* Màu nền chung cho trang */
+    padding-top: 100px;
+}
+
+/* --- Header & Navbar --- */
+.top-header {
+    font-size: 0.8rem;
+    background-color: #fff;
+}
+.top-header a {
+    text-decoration: none;
+    color: #333;
+}
+.navbar .nav-link {
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #333;
+    margin: 0 10px;
+    transition: color 0.2s;
+}
+.navbar .nav-link:hover {
+    color: #c82333;
+}
+.nav-icon {
+    color: #333;
+    margin-left: 1.5rem;
+    font-size: 1.2rem;
+}
+.nav-icon .badge {
+    font-size: 0.6em;
+}
+
+/* --- Hero Carousel --- */
+.carousel-item img {
+    height: 75vh;
+    object-fit: cover;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+}
+
+/* --- General Section Title --- */
+.section-title {
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 50px;
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background-color: #c82333;
+}
+
+/* --- Category Banners --- */
+.category-banners .card img {
+    transition: transform 0.3s ease;
+}
+.category-banners .card:hover img {
+    transform: scale(1.05);
+}
+
+/* --- Product Cards --- */
+.product-card {
+    background: #fff;
+    border: 1px solid #eee;
+    text-align: center;
+    padding: 15px;
+    transition: box-shadow 0.3s ease;
+    height: 100%;
+}
+.product-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.product-card img {
+    max-width: 100%;
+    margin-bottom: 15px;
+}
+.product-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #333;
+}
+.product-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #c82333;
+    margin: 10px 0;
+}
+.btn-buy {
+    background-color: #f1f1f1;
+    border: none;
+    color: #555;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    transition: background-color 0.2s;
+}
+.btn-buy:hover {
+    background-color: #ddd;
+    color: #000;
+}
+.btn-buy i {
+    font-size: 0.7rem;
+    margin-left: 5px;
+}
+
+/* --- Service Promises Section --- */
+.service-promises {
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    background-color: #fff;
+}
+.service-icon i {
+    color: #555;
+}
+.service-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: #333;
+    margin-bottom: 2px;
+}
+.service-subtitle {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* --- Footer --- */
+.site-footer {
+    background-color: #fff;
+    border-top: 1px solid #e9ecef;
+    font-size: 0.9rem;
+}
+.footer-title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+.footer-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: #c82333;
+}
+.footer-link {
+    color: #6c757d;
+    text-decoration: none;
+    line-height: 2;
+    transition: color 0.2s;
+}
+.footer-link:hover {
+    color: #333;
+}
+.social-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+    transition: background-color 0.2s;
+}
+.social-icon:hover {
+    background-color: #c82333;
+    color: white;
+}
+
+.fixed-header .navbar {
+    background-color: transparent !important;
+}
+
+/* --- Product Slider & Controls (FIXED V3) --- */
+
+/* Khung định vị cho slider và các nút */
+.product-slider-container {
+    position: relative;
+}
+
+/* Khung chứa các sản phẩm, có chức năng ẩn phần thừa */
+.product-slider-wrapper {
+    overflow: hidden;
+}
+
+/* Dải sản phẩm có thể trượt */
+.product-slider {
+    display: flex;
+    flex-wrap: nowrap;
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Nút bấm điều khiển */
+.btn-slide-side {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    color: #333;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-slide-side:hover {
+    background-color: #c82333;
+    color: #fff;
+    border-color: #c82333;
+}
+
+.btn-slide-side.prev-btn {
+    /* Đẩy nút ra ngoài khung chứa về bên trái */
+    left: -22px;
+}
+
+.btn-slide-side.next-btn {
+    /* Đẩy nút ra ngoài khung chứa về bên phải */
+    right: -22px;
+}
+
+.btn-slide-side:disabled {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-50%) scale(0.5);
+}
+
+/* Đảm bảo các cột sản phẩm giữ đúng kích thước */
+.product-slider > .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+@media (min-width: 768px) {
+    .product-slider > .col-md-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+/* Ghi đè, không viết hoa cho menu tài khoản */
+#userAccountDropdown {
+    text-transform: none !important;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: #fc6675; /* màu bình thường */
+}
+
+.carousel-indicators .active {
+    background-color: #c82333; /* màu active */
+}
+

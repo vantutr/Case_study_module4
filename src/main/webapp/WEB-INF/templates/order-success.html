@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt hàng thành công - Fashion Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" th:href="@{/static/css/home.css}" />
+</head>
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container my-5 text-center">
+    <div class="py-5">
+        <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+        <h1 class="display-5 fw-bold">Đặt hàng thành công!</h1>
+        <p class="fs-5 text-muted col-lg-6 mx-auto">
+            Cảm ơn bạn đã mua sắm tại Fashion Shop. Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+            <a th:href="@{/shop}" class="btn btn-primary btn-lg px-4 gap-3">Tiếp tục mua sắm</a>
+            <a href="#" class="btn btn-outline-secondary btn-lg px-4">Xem lịch sử đơn hàng</a>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

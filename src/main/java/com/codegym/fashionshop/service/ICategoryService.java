@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface ICategoryService {
     List<Category> findAllSubCategories(); // Lấy danh sách các danh mục con
-    List<Category> findAllParentCategories(); // Lấy danh sách các danh mục cha
+    // Phương thức cho trang Admin
+    List<Category> findAllParentCategories();
+
+    List<Category> findAllParentCategoriesWithChildren();
     void save(CategoryDto categoryDto);
     CategoryDto findDtoById(Long id);
     void delete(Long id);

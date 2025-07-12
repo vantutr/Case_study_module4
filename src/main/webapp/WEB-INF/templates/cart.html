@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giỏ hàng - Fashion Shop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" th:href="@{/static/css/home.css}" />
+  <link rel="stylesheet" th:href="@{/static/css/cart.css}" />
+</head>
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container my-5">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a th:href="@{/home}">Trang chủ</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Giỏ hàng</li>
+    </ol>
+  </nav>
+
+  <div th:if="${error_message}" class="alert alert-danger" th:text="${error_message}"></div>
+
+  <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+  <div th:if="${cart.items.isEmpty()}" class="text-center py-5">
+    <h4>Giỏ hàng của bạn đang trống</h4>
+    <a th:href="@{/shop}" class="btn btn-primary mt-3">Tiếp tục mua sắm</a>
+  </div>
+
+  <div th:unless="${cart.items.isEmpty()}">
+    <div class="table-responsive">
+      <table class="table cart-table">
+        <thead>
+        <tr>
+          <th scope="col" colspan="2">SẢN PHẨM</th>
+          <th scope="col">GIÁ</th>
+          <th scope="col">SỐ LƯỢNG</th>
+          <th scope="col">TẠM TÍNH</th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cart.items.values()}">
+          <td style="width: 100px">
+            <img th:src="@{/uploads/products/{img}(img=${item.imageUrl})}"
+                 th:alt="${item.productName}" class="cart-product-img"/>
+          </td>
+          <td>
+            <h6 class="cart-product-name" th:text="${item.productName}"></h6>
+            <p class="cart-product-size text-muted mb-0" th:text="'Size: ' + ${item.size}"></p>
+          </td>
+          <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+          <td>
+            <form th:action="@{/cart/update}" method="post" class="quantity-selector">
+              <input type="hidden" name="variantId" th:value="${item.variantId}">
+              <input type="number" name="quantity" class="form-control form-control-sm text-center"
+                     th:value="${item.quantity}" onchange="this.form.submit()">
+            </form>
+          </td>
+          <td><strong class="cart-product-total" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></strong></td>
+          <td>
+            <a th:href="@{/cart/remove/{variantId}(variantId=${item.variantId})}" class="btn btn-sm btn-remove">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <form th:action="@{/checkout}" method="post" class="row mt-5">
+      <div class="col-lg-7 mb-4">
+        <div class="checkout-box">
+          <h4>Thông tin đặt hàng</h4>
+          <p class="text-muted">Nhập đầy đủ thông tin của bạn để chúng tôi giao hàng.</p>
+
+          <div class="mb-3">
+            <label for="customerName" class="form-label">Tên người nhận</label>
+            <input type="text" class="form-control" id="customerName" name="customerName" th:value="${#authentication.principal != 'anonymousUser' ? #authentication.principal.fullName : ''}" required/>
+          </div>
+          <div class="mb-3">
+            <label for="customerPhone" class="form-label">Số điện thoại người nhận</label>
+            <input type="tel" class="form-control" id="customerPhone" name="customerPhone" th:value="${#authentication.principal != 'anonymousUser' ? #authentication.principal.phone : ''}" required/>
+          </div>
+          <div class="mb-3">
+            <label for="customerEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="customerEmail" name="customerEmail" th:value="${#authentication.principal != 'anonymousUser' ? #authentication.principal.email : ''}" required/>
+          </div>
+          <div class="mb-3">
+            <label for="customerAddress" class="form-label">Địa chỉ giao hàng</label>
+            <textarea class="form-control" id="customerAddress" name="shippingAddress" rows="3" th:text="${#authentication.principal != 'anonymousUser' ? #authentication.principal.address : ''}" required></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5 mb-4">
+        <div class="checkout-box">
+          <h4>Thông tin hóa đơn</h4>
+          <div class="order-summary">
+            <div class="summary-item d-flex justify-content-between" th:each="item : ${cart.items.values()}">
+              <span th:text="${item.productName} + ' x ' + ${item.quantity}"></span>
+              <strong th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></strong>
+            </div>
+            <hr />
+            <div class="summary-item total-bill d-flex justify-content-between">
+              <h5>Thành tiền</h5>
+              <h5 class="text-danger" th:text="${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-danger btn-lg w-100 mt-4">
+            ĐẶT HÀNG
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,18 +1,264 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
 <head>
-  <meta charset="UTF-8">
-  <title>Trang Chủ</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fashion Shop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" th:href="@{/static/css/home.css}" />
 </head>
 <body>
-<div class="container text-center mt-5">
-  <h1>Chào mừng <span sec:authentication="principal.username">User</span> đã đăng nhập vào trang chủ!</h1>
-  <p>Đây là trang Frontend của Fashion Shop.</p>
-  <form th:action="@{/logout}" method="post" class="mt-3">
-    <button type="submit" class="btn btn-danger">Đăng xuất</button>
-  </form>
-</div>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main>
+  <section class="hero-section">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button
+                type="button"
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="2"
+                aria-label="Slide 3"
+        ></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img
+                  th:src="@{/static/images/banner1.jpg}"
+                  class="d-block w-100"
+                  alt="Mercedes C-Class"
+          />
+        </div>
+        <div class="carousel-item">
+          <img th:src="@{/static/images/banner1.jpg}" class="d-block w-100" alt="Mercedes GLE" />
+        </div>
+        <div class="carousel-item">
+          <img th:src="@{/static/images/banner1.jpg}" class="d-block w-100" alt="Mercedes EQB" />
+        </div>
+      </div>
+      <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </section>
+
+  <section id="newest-products" class="product-section container my-5">
+    <h2 class="section-title">Sản phẩm Mới Nhất</h2>
+    <div class="product-slider-container">
+      <div class="product-slider-wrapper">
+        <div class="row g-4 product-slider">
+          <div class="col-6 col-md-3" th:each="product : ${newestProducts}">
+            <div class="product-card">
+              <a href="#">
+                <img th:src="@{/uploads/products/{img}(img=${product.imageUrl})}"
+                     th:alt="${product.name}"
+                     onerror="this.src='https://placehold.co/400x600?text=No+Image'"
+                />
+              </a>
+              <div class="product-info">
+                <h3 class="product-name" th:text="${product.name}"></h3>
+                <p class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+                <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-buy">
+                  Xem chi tiết <i class="fas fa-chevron-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn-slide-side prev-btn"><i class="fas fa-chevron-left"></i></button>
+        <button class="btn-slide-side next-btn"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="bestseller-products" class="product-section container my-5">
+    <h2 class="section-title">Sản phẩm bán chạy</h2>
+    <div class="product-slider-container">
+      <div class="product-slider-wrapper">
+        <div class="row g-4 product-slider">
+          <div class="col-6 col-md-3" th:each="product : ${bestsellerProducts}">
+            <div class="product-card">
+              <a href="#">
+                <img th:src="@{/uploads/products/{img}(img=${product.imageUrl})}" th:alt="${product.name}" onerror="this.src='https.placehold.co/400x600?text=No+Image'"/>
+              </a>
+              <div class="product-info">
+                <h3 class="product-name" th:text="${product.name}"></h3>
+                <p class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+                <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-buy">
+                  Xem chi tiết <i class="fas fa-chevron-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn-slide-side prev-btn"><i class="fas fa-chevron-left"></i></button>
+        <button class="btn-slide-side next-btn"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="service-promises container my-5 py-4">
+    <div class="row">
+      <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+        <div class="d-flex align-items-center">
+          <div class="service-icon me-3">
+            <i class="fas fa-shipping-fast fa-2x"></i>
+          </div>
+          <div>
+            <h6 class="service-title">Miễn phí vận chuyển</h6>
+            <p class="service-subtitle mb-0">
+              Áp dụng cho mọi đơn hàng từ 500k
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+        <div class="d-flex align-items-center">
+          <div class="service-icon me-3">
+            <i class="fas fa-exchange-alt fa-2x"></i>
+          </div>
+          <div>
+            <h6 class="service-title">Đổi hàng dễ dàng</h6>
+            <p class="service-subtitle mb-0">
+              7 ngày đổi hàng vì bất kì lí do gì
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4 mb-md-0">
+        <div class="d-flex align-items-center">
+          <div class="service-icon me-3">
+            <i class="fas fa-headset fa-2x"></i>
+          </div>
+          <div>
+            <h6 class="service-title">Hỗ trợ nhanh chóng</h6>
+            <p class="service-subtitle mb-0">HOTLINE 24/7: 0964942121</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="d-flex align-items-center">
+          <div class="service-icon me-3">
+            <i class="far fa-credit-card fa-2x"></i>
+          </div>
+          <div>
+            <h6 class="service-title">Thanh toán đa dạng</h6>
+            <p class="service-subtitle mb-0">
+              Thanh toán khi nhận hàng, Napas, Visa...
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    /**
+     * Hàm khởi tạo slider cho một khu vực sản phẩm
+     * @param {string} sectionId - ID của thẻ <section> chứa slider
+     */
+    function initializeSlider(sectionId) {
+      const section = document.querySelector(sectionId);
+      if (!section) return;
+
+      const slider = section.querySelector(".product-slider");
+      const prevBtn = section.querySelector(".prev-btn");
+      const nextBtn = section.querySelector(".next-btn");
+      const items = section.querySelectorAll(".product-slider > div");
+
+      if (!slider || !prevBtn || !nextBtn || items.length === 0) return;
+
+      let currentIndex = 0;
+      let itemsVisible = 4;
+
+      // Hàm cập nhật số sản phẩm hiển thị dựa trên kích thước màn hình
+      function updateItemsVisible() {
+        if (window.innerWidth < 768) {
+          itemsVisible = 2; // Mobile
+        } else {
+          itemsVisible = 4; // Desktop
+        }
+      }
+
+      // Hàm cập nhật trạng thái của các nút (bật/tắt)
+      function updateButtons() {
+        prevBtn.disabled = currentIndex === 0;
+        // Tắt nút Next khi không còn đủ sản phẩm để trượt qua một trang nữa
+        nextBtn.disabled = currentIndex >= items.length - itemsVisible;
+      }
+
+      // Hàm chính thực hiện việc trượt
+      function slide() {
+        // Lấy chiều rộng của một sản phẩm (đã bao gồm padding)
+        const itemWidth = items[0].getBoundingClientRect().width;
+
+        // Tính toán khoảng cách cần di chuyển
+        const moveDistance = itemWidth * currentIndex;
+
+        // Áp dụng hiệu ứng transform
+        slider.style.transform = `translateX(-${moveDistance}px)`;
+        updateButtons();
+      }
+
+      nextBtn.addEventListener("click", () => {
+        // Chỉ trượt khi chưa ở cuối
+        if (currentIndex < items.length - itemsVisible) {
+          currentIndex++;
+          slide();
+        }
+      });
+
+      prevBtn.addEventListener("click", () => {
+        // Chỉ trượt khi chưa ở đầu
+        if (currentIndex > 0) {
+          currentIndex--;
+          slide();
+        }
+      });
+
+      // Lắng nghe sự kiện resize để điều chỉnh lại slider cho responsive
+      window.addEventListener("resize", () => {
+        updateItemsVisible();
+        // Đảm bảo index không bị "lố" khi resize từ màn hình lớn về nhỏ
+        if (currentIndex > items.length - itemsVisible) {
+          currentIndex = items.length - itemsVisible;
+        }
+        slide();
+      });
+
+      // Chạy các hàm khởi tạo khi tải trang
+      updateItemsVisible();
+      updateButtons();
+    }
+
+    // Khởi tạo cho cả hai slider
+    initializeSlider("#newest-products");
+    initializeSlider("#bestseller-products");
+  });
+</script>
 </body>
 </html>
-

@@ -20,9 +20,15 @@ public class CategoryServiceImpl implements ICategoryService {
         return categoryRepository.findByParentIsNotNull();
     }
 
+    // Triển khai phương thức cho Admin
     @Override
     public List<Category> findAllParentCategories() {
         return categoryRepository.findByParentIsNull();
+    }
+
+    @Override
+    public List<Category> findAllParentCategoriesWithChildren() {
+        return categoryRepository.findAllParentCategoriesWithChildren();
     }
 
     // Cập nhật logic để xử lý parentId

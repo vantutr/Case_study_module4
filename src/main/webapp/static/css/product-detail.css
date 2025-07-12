@@ -1,0 +1,155 @@
+/* --- Breadcrumb --- */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+.breadcrumb-item a {
+    text-decoration: none;
+    color: #c82333;
+}
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+
+/* --- Product Gallery --- */
+.product-gallery {
+    gap: 25px; /* Khoảng cách giữa ảnh chính và ảnh con */
+}
+
+.main-image-container {
+    flex-basis: 70%; /* Ảnh chính chiếm phần lớn không gian */
+}
+
+#mainProductImage {
+    width: 100%;
+    height: 100%;
+    max-height: 520px; /* Chiều cao tối đa của ảnh chính */
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.thumbnail-slider {
+    flex-basis: 30%; /* Ảnh con chiếm phần còn lại */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 80px;
+}
+
+.slider-control {
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    color: #333;
+    width: 100%;
+    padding: 5px 0px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    z-index: 10;
+}
+.slider-control:hover {
+    background-color: #eee;
+}
+#slideUp {
+    border-radius: 4px 4px 0 0;
+    margin-bottom: -1px; /* Che đường viền của container ảnh */
+}
+#slideDown {
+    border-radius: 0 0 4px 4px;
+    margin-top: -1px; /* Che đường viền của container ảnh */
+}
+
+.thumbnail-images {
+    /* Hiển thị 3 ảnh (3 * (chiều cao 100px + lề dưới 10px)) */
+    max-height: 450px;
+    overflow: hidden;
+    scroll-behavior: smooth; /* Hiệu ứng trượt mượt mà */
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.thumbnail-images .img-thumbnail {
+    width: 100%;
+    height: 225px; /* Chiều cao cố định */
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+    margin-bottom: 10px;
+    padding: 3px;
+    border-radius: 5px;
+}
+.thumbnail-images .img-thumbnail:last-child {
+    margin-bottom: 0;
+}
+
+.thumbnail-images .img-thumbnail.active,
+.thumbnail-images .img-thumbnail:hover {
+    border-color: #c82333;
+}
+
+/* --- Product Details --- */
+/* .product-details {
+  padding-left: 5px;
+} */
+.product-title {
+    font-weight: bold;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+.product-price-sku .price {
+    color: #c82333;
+    font-weight: bold;
+}
+.option-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #555;
+}
+.color-options .btn,
+.size-options .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.size-options .btn.active,
+.color-options .btn.active {
+    background-color: #343a40;
+    color: white;
+    border-color: #343a40;
+}
+.quantity-selector .form-control {
+    border-left: 0;
+    border-right: 0;
+    box-shadow: none;
+}
+.product-policy {
+    background-color: #f8f9fa;
+    border: 1px dashed #ced4da;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+.product-policy .policy-item {
+    margin-bottom: 8px;
+}
+.product-policy .policy-item:last-child {
+    margin-bottom: 0;
+}
+
+/* --- Accordion for Product Info --- */
+.accordion-button {
+    font-weight: bold;
+    color: #333;
+}
+.accordion-button:not(.collapsed) {
+    background-color: #f8f9fa;
+    color: #c82333;
+}
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(200, 35, 51, 0.25);
+}
+.accordion-body ul {
+    padding-left: 20px;
+}
