@@ -57,7 +57,7 @@
                 <h1 class="product-title" th:text="${product.name}"></h1>
                 <div class="product-price-sku d-flex align-items-center mb-3">
                     <span class="price h4" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
-                    <span class="sku ms-auto text-muted" th:text="'SKU: ' + ${product.id}"></span>
+                    <span class="sku ms-auto text-muted" th:text="'SKU: MS -  ' + ${product.id}"></span>
                 </div>
 
                 <div class="mb-4">

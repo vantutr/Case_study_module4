@@ -2,64 +2,80 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/admin-layout}">
-<head><title>Tổng quan</title></head>
+<head>
+    <title>Tổng quan</title>
+</head>
 <body>
 <div layout:fragment="content">
-    <h1 class="mt-4">Tổng quan</h1>
+    <h1 class="mb-4">Tổng quan</h1>
     <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-start border-primary border-4 h-100 py-2">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col me-2">
-                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Đơn hàng chưa duyệt</div>
-                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${pendingOrdersCount}">0</div>
-                        </div>
-                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
+                    <div>
+                        <div class="text-xs text-primary">Đơn hàng chưa duyệt</div>
+                        <div class="h5 mb-0 fw-bold" th:text="${pendingOrdersCount}">0</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-list"></i>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-start border-success border-4 h-100 py-2">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col me-2">
-                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Tổng đơn hàng</div>
-                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${totalOrdersCount}">0</div>
-                        </div>
-                        <div class="col-auto"><i class="fas fa-shopping-cart fa-2x text-gray-300"></i></div>
+                    <div>
+                        <div class="text-xs text-success">Tổng đơn hàng</div>
+                        <div class="h5 mb-0 fw-bold" th:text="${totalOrdersCount}">0</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-receipt"></i>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-start border-info border-4 h-100 py-2">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col me-2">
-                            <div class="text-xs fw-bold text-info text-uppercase mb-1">Tổng sản phẩm</div>
-                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${totalProductsCount}">0</div>
-                        </div>
-                        <div class="col-auto"><i class="fas fa-box-open fa-2x text-gray-300"></i></div>
+                    <div>
+                        <div class="text-xs text-info">Tổng sản phẩm</div>
+                        <div class="h5 mb-0 fw-bold" th:text="${totalProductsCount}">0</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-tshirt"></i>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-start border-warning border-4 h-100 py-2">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col me-2">
-                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">Tài khoản người dùng</div>
-                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${userAccountsCount}">0</div>
-                        </div>
-                        <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
+                    <div>
+                        <div class="text-xs text-warning">Tài khoản người dùng</div>
+                        <div class="h5 mb-0 fw-bold" th:text="${userAccountsCount}">0</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    Biểu đồ Doanh thu (Ví dụ)
+                </div>
+                <div class="card-body">
+                    <p class="text-center text-muted">Nơi để biểu đồ của bạn...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>

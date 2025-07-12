@@ -329,7 +329,7 @@ body {
     z-index: 2;
 }
 .out-of-stock-overlay span {
-    background-color: #343a40;
+    background-color: #c82333;
     color: white;
     padding: 5px 15px;
     border-radius: 5px;
