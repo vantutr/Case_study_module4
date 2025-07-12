@@ -9,6 +9,7 @@ import com.codegym.fashionshop.service.IProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,10 +20,7 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -168,12 +166,28 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<Product> findNewestProducts() {
-        return productRepository.findAllByOrderByIdDesc();
+        return productRepository.findNewestProductsWithVariants();
     }
 
     @Override
     public List<Product> findBestsellerProducts(int limit) {
-        return productRepository.findBestsellerProducts(PageRequest.of(0, limit));
+        // Bước 1: Lấy danh sách ID đã được sắp xếp
+        List<Long> ids = productRepository.findBestsellerProductIds(PageRequest.of(0, limit));
+
+        if (ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Bước 2: Lấy thông tin sản phẩm từ danh sách ID
+        List<Product> unsortedProducts = productRepository.findByIdsWithVariants(ids);
+
+        // Bước 3: Sắp xếp lại danh sách sản phẩm theo đúng thứ tự của danh sách ID
+        Map<Long, Product> productMap = unsortedProducts.stream()
+                .collect(Collectors.toMap(Product::getId, p -> p));
+
+        return ids.stream()
+                .map(productMap::get)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -191,6 +205,31 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public Page<Product> findAll(Specification<Product> spec, Pageable pageable) {
-        return productRepository.findAll(spec, pageable);
+        // Bước 1: Lấy trang sản phẩm với các 'variants' chưa được tải (lazy)
+        // Việc này để lấy đúng thông tin phân trang (tổng số sản phẩm, tổng số trang)
+        Page<Product> lazyProductPage = productRepository.findAll(spec, pageable);
+        List<Product> lazyProducts = lazyProductPage.getContent();
+
+        if (lazyProducts.isEmpty()) {
+            return lazyProductPage; // Trả về trang rỗng nếu không có sản phẩm
+        }
+
+        // Bước 2: Lấy danh sách ID từ các sản phẩm đã tìm được
+        List<Long> ids = lazyProducts.stream().map(Product::getId).collect(Collectors.toList());
+
+        // Bước 3: Dùng danh sách ID để tải lại sản phẩm với đầy đủ 'variants' (eager)
+        // Chúng ta sử dụng lại phương thức findByIdsWithVariants đã tạo trước đó
+        List<Product> fullyLoadedProducts = productRepository.findByIdsWithVariants(ids);
+
+        // Bước 4: Sắp xếp lại danh sách đã tải đầy đủ theo đúng thứ tự của trang
+        Map<Long, Product> productMap = fullyLoadedProducts.stream()
+                .collect(Collectors.toMap(Product::getId, p -> p));
+
+        List<Product> sortedFullyLoadedProducts = ids.stream()
+                .map(productMap::get)
+                .collect(Collectors.toList());
+
+        // Bước 5: Trả về một đối tượng Page mới với nội dung đã được tải đầy đủ
+        return new PageImpl<>(sortedFullyLoadedProducts, pageable, lazyProductPage.getTotalElements());
     }
 }

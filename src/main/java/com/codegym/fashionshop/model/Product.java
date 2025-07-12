@@ -37,4 +37,11 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC") // Sắp xếp các biến thể theo ID tăng dần
     private Set<ProductVariant> variants;
+
+    public boolean isOutOfStock() {
+        if (this.variants == null || this.variants.isEmpty()) {
+            return true;
+        }
+        return this.variants.stream().allMatch(variant -> variant.getQuantity() <= 0);
+    }
 }

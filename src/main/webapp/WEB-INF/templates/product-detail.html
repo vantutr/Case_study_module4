@@ -68,7 +68,8 @@
                                 th:classappend="${iterStat.first} ? 'active'"
                                 th:data-variant-id="${variant.id}"
                                 th:data-quantity="${variant.quantity}"
-                                th:text="${variant.size}">
+                                th:text="${variant.size}"
+                                th:disabled="${variant.quantity <= 0}">
                         </button>
                     </div>
                 </div>

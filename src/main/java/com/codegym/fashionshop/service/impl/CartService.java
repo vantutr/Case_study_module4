@@ -32,19 +32,22 @@ public class CartService {
         CartDto cart = getCart(session);
         Map<Long, CartItemDto> items = cart.getItems();
 
-        // Lấy số lượng tồn kho thực tế từ database
-        int stockQuantity = variant.getQuantity() - variant.getSoldQuantity();
+        int stockQuantity = variant.getQuantity();
 
-        // Lấy số lượng sản phẩm này đã có trong giỏ hàng
         int currentQuantityInCart = 0;
         if (items.containsKey(variantId)) {
             currentQuantityInCart = items.get(variantId).getQuantity();
         }
 
-        // Kiểm tra xem tổng số lượng (mới + cũ) có vượt quá tồn kho không
+        // Kiểm tra tổng số lượng (mới + cũ) có vượt quá tồn kho không
         if (currentQuantityInCart + quantity > stockQuantity) {
-            // Nếu vượt quá, ném ra một ngoại lệ để Controller bắt lại
-            throw new RuntimeException("Số lượng tồn kho không đủ cho sản phẩm: " + variant.getProduct().getName());
+            // THAY ĐỔI THÔNG BÁO LỖI Ở ĐÂY
+            String errorMessage = String.format(
+                    "Số lượng tồn kho cho sản phẩm '%s' không đủ. Bạn đã có %d sản phẩm này trong giỏ hàng.",
+                    variant.getProduct().getName(),
+                    currentQuantityInCart
+            );
+            throw new RuntimeException(errorMessage);
         }
 
         if (items.containsKey(variantId)) {

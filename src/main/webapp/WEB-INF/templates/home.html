@@ -67,18 +67,21 @@
         <div class="row g-4 product-slider">
           <div class="col-6 col-md-3" th:each="product : ${newestProducts}">
             <div class="product-card">
-              <a href="#">
-                <img th:src="@{/uploads/products/{img}(img=${product.imageUrl})}"
-                     th:alt="${product.name}"
-                     onerror="this.src='https://placehold.co/400x600?text=No+Image'"
-                />
+              <div th:if="${product.isOutOfStock()}" class="out-of-stock-overlay">
+                <span>Hết hàng</span>
+              </div>
+
+              <a th:href="@{/products/{id}(id=${product.id})}">
+                <img th:src="@{/uploads/products/{img}(img=${product.imageUrl})}" th:alt="${product.name}" onerror="this.src='https.placehold.co/400x600?text=No+Image'"/>
               </a>
               <div class="product-info">
                 <h3 class="product-name" th:text="${product.name}"></h3>
                 <p class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
-                <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-buy">
+
+                <a th:if="${!product.isOutOfStock()}" th:href="@{/products/{id}(id=${product.id})}" class="btn btn-buy">
                   Xem chi tiết <i class="fas fa-chevron-right"></i>
                 </a>
+                <button th:if="${product.isOutOfStock()}" class="btn btn-buy" disabled>Hết hàng</button>
               </div>
             </div>
           </div>
