@@ -30,28 +30,48 @@ public class WebSecurityConfig {
         return authProvider;
     }
 
+    // trong file: src/main/java/com/codegym/fashionshop/config/WebSecurityConfig.java
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authorize -> authorize
-                        .antMatchers("/register**", "/static/**", "/login").permitAll()
+                .csrf(csrf -> csrf.disable())
+                .authorizeRequests(auth -> auth
+                        // PHẦN 1: CÁC TRANG CÔNG KHAI
+                        .antMatchers(
+                                "/", "/home", "/shop/**", "/products/**", // Các trang người dùng có thể xem
+                                "/login", "/logout", "/register",                     // Trang đăng nhập/đăng xuất
+                                "/static/**", "/uploads/**"              // Các tài nguyên tĩnh (css, js, ảnh)
+                        ).permitAll()
+
+                        // PHẦN 2: CÁC TRANG CỦA ADMIN
                         .antMatchers("/admin/**").hasRole("ADMIN")
-                        .antMatchers("/home").hasRole("USER")
+
+                        // PHẦN 3: CÁC TRANG CẦN ĐĂNG NHẬP (Bất kỳ vai trò nào)
+                        .antMatchers("/cart/**", "/checkout/**", "/my-orders/**").authenticated()
+
+                        // Bất kỳ request nào khác cũng cần đăng nhập
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
+                        // Luôn chuyển về trang chủ sau khi đăng nhập thành công
+                        .defaultSuccessUrl("/home", true)
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureHandler(customAuthenticationFailureHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/home")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
+                )
+                .exceptionHandling(e -> e
+                        .accessDeniedPage("/403")
                 );
 
-        // CSRF được bật mặc định và sẽ hoạt động với cấu hình này
         return http.build();
     }
 }

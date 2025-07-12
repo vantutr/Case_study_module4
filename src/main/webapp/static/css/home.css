@@ -280,3 +280,35 @@ body {
     background-color: #c82333; /* màu active */
 }
 
+/* === CUSTOM BUTTON STYLES === */
+
+/* Nút chính (nền đỏ, chữ trắng) */
+.btn-custom-primary {
+    background-color: #c82333;
+    border-color: #c82333;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-custom-primary:hover,
+.btn-custom-primary:focus {
+    background-color: #a21b29; /* Màu đỏ đậm hơn khi hover */
+    border-color: #a21b29;
+    color: #fff;
+}
+
+/* Nút viền (viền đỏ, chữ đỏ) */
+.btn-custom-outline {
+    color: #c82333;
+    border-color: #c82333;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-custom-outline:hover,
+.btn-custom-outline:focus {
+    background-color: #c82333;
+    border-color: #c82333;
+    color: #fff;
+}
+

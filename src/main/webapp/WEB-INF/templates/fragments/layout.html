@@ -63,14 +63,20 @@
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href="#">Tài khoản của tôi</a></li>
               <li><a class="dropdown-item" th:href="@{/my-orders}">Đơn hàng của tôi</a></li>
+              <li sec:authorize="hasRole('ADMIN')">
+                <hr class="dropdown-divider" />
+                <a class="dropdown-item" th:href="@{/admin/dashboard}">
+                  Trang quản trị viên
+                </a>
+              </li>
               <li><hr class="dropdown-divider" /></li>
               <li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>
             </ul>
           </div>
 
           <div sec:authorize="isAnonymous()" class="d-flex align-items-center ms-3">
-            <a th:href="@{/login}" class="btn btn-outline-primary btn-sm me-2">Đăng nhập</a>
-            <a th:href="@{/register}" class="btn btn-primary btn-sm">Đăng ký</a>
+            <a th:href="@{/login}" class="btn btn-custom-outline btn-sm me-2">Đăng nhập</a>
+            <a th:href="@{/register}" class="btn btn-custom-primary btn-sm">Đăng ký</a>
           </div>
 
         </div>
