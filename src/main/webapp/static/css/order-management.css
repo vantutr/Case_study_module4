@@ -1,0 +1,153 @@
+/* --- Account Sidebar (Menu bên trái) --- */
+.account-sidebar {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+}
+
+.account-user-info {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 20px;
+}
+
+.account-user-info .user-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.account-user-info .edit-profile {
+    font-size: 0.9em;
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.account-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.account-nav a {
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.account-nav a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.account-nav a:hover {
+    background-color: #f8f9fa;
+}
+
+.account-nav a.active {
+    background-color: #c82333;
+    color: #fff;
+    font-weight: 500;
+}
+
+/* --- Order List (Danh sách đơn hàng bên phải) --- */
+.order-list-header {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+}
+
+.order-list-header h4 {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.order-card {
+    background-color: #fff;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.order-card-header .order-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-card-header .order-status {
+    font-weight: 600;
+}
+
+.order-card-body {
+    padding: 20px;
+}
+
+.product-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.product-item .product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.product-item .product-details {
+    flex-grow: 1;
+}
+
+.product-item .product-details p {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.product-item .product-name {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.product-item .product-price {
+    font-weight: 500;
+    font-size: 1.1em;
+}
+
+.order-card-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #e9ecef;
+    text-align: right;
+}
+
+.price-summary div {
+    margin-bottom: 5px;
+}
+
+.price-summary .total-price {
+    font-size: 1.2em;
+    margin-top: 10px;
+}

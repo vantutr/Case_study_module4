@@ -67,7 +67,7 @@
                                 type="button" class="btn btn-outline-secondary size-btn"
                                 th:classappend="${iterStat.first} ? 'active'"
                                 th:data-variant-id="${variant.id}"
-                                th:data-quantity="${variant.quantity - variant.soldQuantity}"
+                                th:data-quantity="${variant.quantity}"
                                 th:text="${variant.size}">
                         </button>
                     </div>
@@ -86,7 +86,7 @@
                     <h6 class="option-title">
                         Số lượng còn lại:
                         <span id="stockQuantity" style="color: #c82333; font-size: 20px"
-                              th:text="${!product.variants.isEmpty() ? (product.variants[0].quantity - product.variants[0].soldQuantity) : 0}">
+                              th:text="${!product.variants.isEmpty() ? product.variants[0].quantity : 0}">
                         </span> sản phẩm
                     </h6>
                 </div>

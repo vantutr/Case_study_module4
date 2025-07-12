@@ -45,12 +45,33 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public void updateStatus(Long orderId, String status) {
-        Order order = findById(orderId);
-        if (order != null && status != null && !status.isEmpty()) {
-            order.setStatus(status);
-            orderRepository.save(order);
+    @Transactional // Đảm bảo các thao tác được thực hiện nhất quán
+    public void updateStatus(Long orderId, String newStatus) {
+        // Dùng findByIdWithDetails để tải luôn các sản phẩm, tránh lỗi Lazy Loading
+        Order order = orderRepository.findByIdWithDetails(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng!"));
+
+        String oldStatus = order.getStatus();
+
+        // Chỉ thực hiện hoàn kho KHI và CHỈ KHI trạng thái cũ chưa phải là 'CANCELLED'
+        // và trạng thái mới LÀ 'CANCELLED'.
+        if (!"CANCELLED".equals(oldStatus) && "CANCELLED".equals(newStatus)) {
+            // Lặp qua từng sản phẩm trong đơn hàng để hoàn kho
+            for (OrderDetail detail : order.getOrderDetails()) {
+                ProductVariant variant = detail.getProductVariant();
+
+                // Cộng lại số lượng vào tồn kho
+                variant.setQuantity(variant.getQuantity() + detail.getQuantity());
+                // Trừ đi số lượng đã bán
+                variant.setSoldQuantity(variant.getSoldQuantity() - detail.getQuantity());
+
+                variantRepository.save(variant);
+            }
         }
+
+        // Cập nhật trạng thái mới cho đơn hàng
+        order.setStatus(newStatus);
+        orderRepository.save(order);
     }
 
     @Override
@@ -107,5 +128,10 @@ public class OrderServiceImpl implements IOrderService {
 
         // 3. Lưu Order (và OrderDetail nhờ CascadeType.ALL)
         orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> findByUser(User user) {
+        return orderRepository.findByUserWithDetails(user);
     }
 }

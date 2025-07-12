@@ -4,6 +4,8 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/admin/admin-layout.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/admin" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/admin/order-detail.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/admin" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/admin/orders.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/admin" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/layout/admin-layout.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/layout" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/shop.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates" />
       </map>

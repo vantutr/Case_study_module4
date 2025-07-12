@@ -9,6 +9,7 @@ import com.codegym.fashionshop.repository.RoleRepository;
 import com.codegym.fashionshop.repository.UserRepository;
 import com.codegym.fashionshop.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,9 +57,15 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
-        if (user == null || !user.isEnabled()) {
-            throw new UsernameNotFoundException("Tài khoản hoặc mật khẩu không hợp lệ.");
+
+        // kiểm tra user có tồn tại hay không.
+        // Nếu không tìm thấy, ném ra exception này.
+        if (user == null) {
+            throw new UsernameNotFoundException("Tên đăng nhập hoặc mật khẩu không hợp lệ.");
         }
+
+        // Nếu tìm thấy, luôn trả về CustomUserDetails.
+        // Spring Security sẽ tự kiểm tra thuộc tính isEnabled() bên trong nó.
         return new CustomUserDetails(user);
     }
 

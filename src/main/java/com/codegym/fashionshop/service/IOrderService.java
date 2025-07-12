@@ -23,4 +23,6 @@ public interface IOrderService {
     long countPendingOrders();
 
     void placeOrder(CartDto cart, CheckoutDto checkoutInfo, User currentUser);
+
+    List<Order> findByUser(User user);
 }
